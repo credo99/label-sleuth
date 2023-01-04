@@ -13,7 +13,7 @@
     limitations under the License.
 */
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { clearState, getDatasets } from './workspaceConfigSlice'
 import { cleanWorkplaceState } from '../Workplace/redux'
 import classes from "./workspace-config.module.css"
@@ -22,9 +22,9 @@ import NewWorkspace from "./NewWorkspaceForm"
 import LoadDocument from "./LoadDocumentForm"
 import ButtonAppBar from "../../components/bars/upperBar/ButtonAppBar"
 import { useDispatch } from 'react-redux'
-import useLoadDoc from '../../customHooks/useLoadDoc';
+import { useLoadDoc } from '../../customHooks/useLoadDoc';
 import useNewWorkspace from '../../customHooks/useNewWorkspace';
-import useLogOut from '../../customHooks/useLogOut';
+import { useLogOut } from '../../customHooks/useLogOut';
 import useExistWorkspace from '../../customHooks/useExistWorkspace';
 import workspace_logo from "../../assets/workspace-config/tag--edit.svg"
 import { toast } from 'react-toastify';
@@ -34,7 +34,7 @@ import { useWorkspaceId } from '../../customHooks/useWorkspaceId';
 const WorkspaceConfig = () => {
   const dispatch = useDispatch()
   const { logout } = useLogOut()
-  const {openBackdrop} = useBackdrop()
+  const {backdropOpen} = useBackdrop()
   const { setWorkspaceId } = useWorkspaceId();
 
   useEffect(() => {
@@ -44,6 +44,7 @@ const WorkspaceConfig = () => {
   }, [setWorkspaceId, dispatch])
 
   const toastId = "workspace-config-toast-id";
+  
   function notify(message, func) {
 
     toast(message, {
@@ -56,10 +57,10 @@ const WorkspaceConfig = () => {
   }
 
 
-  const loadDocProps = useLoadDoc(notify, toastId)
+  const loadDocProps = useLoadDoc({notify, toastId})
   const { options } = loadDocProps
   const newWorkProps = useNewWorkspace(notify, toastId)
-  const existingWorkProps = useExistWorkspace(notify, toastId)
+  const existingWorkProps = useExistWorkspace({notify, toastId})
 
   return (
     <>
@@ -78,7 +79,7 @@ const WorkspaceConfig = () => {
           <NewWorkspace  {...newWorkProps} options={options} />
         </div>
         <div className={classes.newdata}>
-          <LoadDocument {...loadDocProps} openBackdrop={openBackdrop} />
+          <LoadDocument {...loadDocProps} backdropOpen={backdropOpen} />
         </div>
       </div>
     </>
